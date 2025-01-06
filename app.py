@@ -74,7 +74,7 @@ def user_question(question):
 
 
 def main():
-    load_dotenv()
+
     st.set_page_config(page_title="Upload Multiple PDFs and chat with them")
 
     st.write(css, unsafe_allow_html=True)
@@ -87,6 +87,9 @@ def main():
     
     st.header("Chat with PDFs Application")
     question = st.text_input("Ask anything about your PDFs:")
+
+    st.write(question_template.replace("{{MSG}}", "Hello"), unsafe_allow_html=True)
+    st.write(answer_template.replace("{{MSG}}", "Hi, I am your personal assistant."), unsafe_allow_html=True)
     
     if question:
         user_question(question)
@@ -111,7 +114,5 @@ def main():
     
 
     
-
-
 if __name__ == "__main__":
     main()
