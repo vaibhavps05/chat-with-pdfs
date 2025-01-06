@@ -87,9 +87,6 @@ def main():
     
     st.header("Chat with PDFs Application")
     question = st.text_input("Ask anything about your PDFs:")
-
-    st.write(question_template.replace("{{MSG}}", "Hello"), unsafe_allow_html=True)
-    st.write(answer_template.replace("{{MSG}}", "Hi, I am your personal assistant."), unsafe_allow_html=True)
     
     if question:
         user_question(question)
