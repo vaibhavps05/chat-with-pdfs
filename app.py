@@ -64,7 +64,13 @@ def create_conversation(vector):
 def user_question(question):
 
     response = st.session_state.conversation.invoke({'question': question})
-    st.write(response)
+    st.session_state.chat_history = response['chat_history']
+
+    for i, message in enumerate(st.session_state.chat_history):
+        if i % 2 == 0:
+            st.write(question_template.replace("{{MSG}}", message.content), unsafe_allow_html=True)
+        else:
+            st.write(answer_template.replace("{{MSG}}", message.content), unsafe_allow_html=True)
 
 
 def main():
@@ -76,16 +82,15 @@ def main():
     if "conversation" not in st.session_state:
         st.session_state.conversation = None
     
+    if "chat_history" not in st.session_state:
+        st.session_state.chat_history = None
+    
     st.header("Chat with PDFs Application")
     question = st.text_input("Ask anything about your PDFs:")
     
     if question:
         user_question(question)
     
-    
-    st.write(question_template.replace("{{MSG}}", "Hello"), unsafe_allow_html=True)
-    st.write(answer_template.replace("{{MSG}}", "Hello! I am here to help you with your PDFs."), unsafe_allow_html=True)
-
     st.subheader("Upload PDFs")
     uploaded_files = st.file_uploader("Upload PDF files and click 'PROCESS'", accept_multiple_files=True)
 
