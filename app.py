@@ -7,6 +7,7 @@ from langchain_community.vectorstores import FAISS
 from langchain.memory import ConversationBufferMemory
 from langchain.chains import ConversationalRetrievalChain
 from langchain_google_genai import ChatGoogleGenerativeAI
+from htmlTemplates import css, answer_template, question_template
 
 
 def get_text_from_pdf(uploaded_files):
@@ -52,21 +53,29 @@ def create_conversation(vector):
         retriever=vector.as_retriever(),
         memory=memory
     )
-    
+
     return conversation
 
+def user_question(question):
 
+    response = st.session_state.conversation({'question': question})
+    st.write(response)
 
 
 def main():
     load_dotenv()
     st.set_page_config(page_title="Upload Multiple PDFs and chat with them")
 
+    st.write(css, unsafe_allow_html=True)
+    
     if "conversation" not in st.session_state:
         st.session_state.conversation = None
     
     st.header("Chat with PDFs Application")
-    st.text_input("Ask anything about your PDFs:")
+    question = st.text_input("Ask anything about your PDFs:")
+    
+    if question:
+        user_question(question)
     
     st.subheader("Upload PDFs")
     uploaded_files = st.file_uploader("Upload PDF files and click 'PROCESS'", accept_multiple_files=True)
@@ -75,6 +84,7 @@ def main():
         with st.spinner("Processing..."):
             # get text
             simple_text = get_text_from_pdf(uploaded_files)
+            st.write(simple_text)
 
             # create chunks
             text_chunks = create_text_chunks(simple_text)
