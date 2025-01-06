@@ -3,7 +3,7 @@ from dotenv import load_dotenv
 from PyPDF2 import PdfReader
 from langchain.text_splitter import CharacterTextSplitter
 from langchain_google_genai import GoogleGenerativeAIEmbeddings
-from langchain.vectorstores import FAISS
+from langchain_community.vectorstores import FAISS
 
 
 def get_text_from_pdf(uploaded_files):
@@ -31,7 +31,11 @@ def create_text_chunks(text):
     text_chunks = text_splitter.split_text(text)
     return text_chunks
 
+def create_vectors(text_chunks):
 
+    embeddings = GoogleGenerativeAIEmbeddings(model = "models/embedding-001")
+    vector_store = FAISS.from_texts(texts=text_chunks, embedding=embeddings)
+    return vector_store
 
 
 
@@ -56,7 +60,8 @@ def main():
             text_chunks = create_text_chunks(simple_text)
 
             #create vectors
-            
+            vector = create_vectors(text_chunks)
+            st.write(vector)
 
 
     
