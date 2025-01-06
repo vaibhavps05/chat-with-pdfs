@@ -1,4 +1,5 @@
 import streamlit as st
+import os
 from dotenv import load_dotenv
 from PyPDF2 import PdfReader
 from langchain.text_splitter import CharacterTextSplitter
@@ -7,8 +8,12 @@ from langchain_community.vectorstores import FAISS
 from langchain.memory import ConversationBufferMemory
 from langchain.chains import ConversationalRetrievalChain
 from langchain_google_genai import ChatGoogleGenerativeAI
+import google.generativeai as genai
 from htmlTemplates import css, answer_template, question_template
 
+load_dotenv()
+os.getenv("GOOGLE_API_KEY")
+genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
 
 def get_text_from_pdf(uploaded_files):
 
@@ -46,8 +51,8 @@ def create_vectors(text_chunks):
 
 def create_conversation(vector):
 
-    llm = ChatGoogleGenerativeAI(model="models/llm-001")
-    memory = ConversationBufferMemory(memory_key="pdf_conversation", return_messages=True)
+    llm = ChatGoogleGenerativeAI(model="gemini-1.5-pro")
+    memory = ConversationBufferMemory(memory_key='chat_history', return_messages=True)
     conversation = ConversationalRetrievalChain.from_llm(
         llm=llm,
         retriever=vector.as_retriever(),
@@ -58,7 +63,7 @@ def create_conversation(vector):
 
 def user_question(question):
 
-    response = st.session_state.conversation({'question': question})
+    response = st.session_state.conversation.invoke({'question': question})
     st.write(response)
 
 
@@ -77,6 +82,10 @@ def main():
     if question:
         user_question(question)
     
+    
+    st.write(question_template.replace("{{MSG}}", "Hello"), unsafe_allow_html=True)
+    st.write(answer_template.replace("{{MSG}}", "Hello! I am here to help you with your PDFs."), unsafe_allow_html=True)
+
     st.subheader("Upload PDFs")
     uploaded_files = st.file_uploader("Upload PDF files and click 'PROCESS'", accept_multiple_files=True)
 
