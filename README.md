@@ -81,6 +81,27 @@ This app leverages cutting-edge technologies to make interacting with PDFs seaml
 - **Google Gemini 1.5 pro (LLM)**: Integrated with model Gemini for enhanced Q&A capabilities.  
 
 ---
+## 🎯 Getting Started
+
+### 1️⃣ Clone the Repository
+```bash 
+git clone https://github.com/your-username/chat-with-pdf.git
+cd chat-with-pdf 
+```
+### 2️⃣ Install the Requirements
+```python
+pip install -r requirements.txt
+```
+### 3️⃣ Launch the Application
+``` python
+streamlit run app.py
+```
+### 4️⃣ Upload and Explore
+
+Open the app in your browser, upload a PDF, and start chatting!
+
+
+---
 
 ## 🌱 Growing the Vision: What’s Next?
 
